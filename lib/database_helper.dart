@@ -7,7 +7,7 @@ class DatabaseHelper {
   static Future<Database> getDatabase() async {
     if (_database != null) return _database!;
 
-    // Initialize the database if it's not already initialized
+    // Initialize the database if not already initialized
     _database = await openDatabase(
       join(await getDatabasesPath(), 'notesDB.db'),
       onCreate: (db, version) {
