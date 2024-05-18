@@ -20,7 +20,7 @@ class DatabaseHelper {
 
     return _database!;
   }
-  
+
   static Future<List<Map<String, dynamic>>> fetchNotes() async {
     final db = await getDatabase();
     return await db.query('notes');
@@ -33,14 +33,9 @@ class DatabaseHelper {
   }
 
   static Future<int> deleteNoteById(int id) async {
-  final db = await getDatabase();
-  return await db.delete('notes', where: 'id = ?', whereArgs: [id]);
-}
-
-  // static Future<int> deleteNoteById(Map<String, dynamic> note) async {
-  //   final db = await getDatabase();
-  //   return await db.delete('notes', where: 'id = ?', whereArgs: [note['id']]);
-  // }
+    final db = await getDatabase();
+    return await db.delete('notes', where: 'id = ?', whereArgs: [id]);
+  }
 
   static Future<int> updateNote(Map<String, dynamic> note) async {
     final db = await getDatabase();
