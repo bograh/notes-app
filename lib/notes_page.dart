@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/database_helper.dart';
 import 'package:myapp/notes_edit_page.dart';
-import 'package:intl/intl.dart';  
+import 'package:intl/intl.dart';
 
 import 'main.dart';
 
