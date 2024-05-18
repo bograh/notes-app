@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Notes',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFF202124),
+        scaffoldBackgroundColor: const Color(0xFF141414),
       ),
       home: const NotesPage(),
     );
@@ -27,13 +27,14 @@ class MyApp extends StatelessWidget {
 class NoteCard extends StatelessWidget {
   final String title;
   final String date;
-  final Color color;  
+  final Color color;
 
   const NoteCard({
     super.key,
     required this.title,
     required this.date,
-    required this.color,  });
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {

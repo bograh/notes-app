@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/database_helper.dart';
+import 'package:myapp/notes_edit_page.dart';
 
 class NoteContentPage extends StatelessWidget {
   final int id;
@@ -31,15 +32,7 @@ class NoteContentPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Note Content',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: const Color(0xFF202124),
+        backgroundColor: const Color(0xFF141414),
         actions: [
           TextButton(
             onPressed: () {
@@ -58,7 +51,8 @@ class NoteContentPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
+      body: Container(
+        color: const Color(0xFF141414),
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,16 +67,37 @@ class NoteContentPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              date,
+              'Last Updated: $date',
               style: const TextStyle(color: Colors.white54),
             ),
             const SizedBox(height: 16),
-            Text(
-              content,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(
+                  content,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NoteEditPage(noteId: id),
+            ),
+          );
+          if (result != null && result) {
+            // ignore: use_build_context_synchronously
+            Navigator.pop(context, true); // Return true to refresh the notes list
+          }
+        },
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.edit),
       ),
     );
   }

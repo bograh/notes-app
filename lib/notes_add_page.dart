@@ -1,34 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/database_helper.dart';
 
-class NoteEditPage extends StatefulWidget {
-  final int? noteId;
-
-  const NoteEditPage({super.key, this.noteId});
+class NoteAddPage extends StatefulWidget {
+  const NoteAddPage({super.key});
 
   @override
-  NoteEditPageState createState() => NoteEditPageState();
+  NoteAddPageState createState() => NoteAddPageState();
 }
 
-class NoteEditPageState extends State<NoteEditPage> {
+class NoteAddPageState extends State<NoteAddPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.noteId != null) {
-      _loadNote();
-    }
-  }
-
-  Future<void> _loadNote() async {
-    final note = await DatabaseHelper.fetchNoteById(widget.noteId!);
-    if (note != null) {
-      _titleController.text = note['title'];
-      _contentController.text = note['content'];
-    }
-  }
 
   Future<void> saveNote() async {
     final title = _titleController.text;
@@ -38,23 +20,14 @@ class NoteEditPageState extends State<NoteEditPage> {
       return;
     }
 
-    if (widget.noteId != null) {
-      await DatabaseHelper.updateNote({
-        'id': widget.noteId,
-        'title': title,
-        'content': content,
-        'created_at': DateTime.now().toIso8601String(),
-      });
-    } else {
-      await DatabaseHelper.insertNote({
-        'title': title,
-        'content': content,
-        'created_at': DateTime.now().toIso8601String(),
-      });
-    }
+    await DatabaseHelper.insertNote({
+      'title': title,
+      'content': content,
+      'created_at': DateTime.now().toIso8601String(),
+    });
 
     // ignore: use_build_context_synchronously
-    Navigator.pop(context, true);
+    Navigator.pop(context, true); // Return true when note is saved
   }
 
   @override
@@ -71,7 +44,7 @@ class NoteEditPageState extends State<NoteEditPage> {
           },
         ),
         title: const Text(
-          'Update Note',
+          'New Note',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -80,7 +53,9 @@ class NoteEditPageState extends State<NoteEditPage> {
         ),
         actions: [
           TextButton(
-            onPressed: saveNote,
+            onPressed: () {
+              saveNote();
+            },
             style: TextButton.styleFrom(
               foregroundColor: Colors.white,
             ),
@@ -113,7 +88,8 @@ class NoteEditPageState extends State<NoteEditPage> {
               ),
             ),
             const SizedBox(height: 16),
-            Expanded(
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.7,
               child: SingleChildScrollView(
                 child: TextField(
                   controller: _contentController,
@@ -127,7 +103,7 @@ class NoteEditPageState extends State<NoteEditPage> {
                   maxLines: null,
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),

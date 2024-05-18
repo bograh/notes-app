@@ -26,6 +26,17 @@ class DatabaseHelper {
     return await db.query('notes');
   }
 
+  static Future<Map<String, dynamic>?> fetchNoteById(int id) async {
+    final db = await getDatabase();
+    final List<Map<String, dynamic>> results = await db.query('notes', where: 'id = ?', whereArgs: [id]);
+
+    if (results.isNotEmpty) {
+      return results.first;
+    } else {
+      return null; // Return null if no note is found
+    }
+  }
+
   static Future<void> insertNote(Map<String, dynamic> note) async {
     final db = await getDatabase();
     await db.insert('notes', note,
@@ -42,4 +53,6 @@ class DatabaseHelper {
     return await db
         .update('notes', note, where: 'id = ?', whereArgs: [note['id']]);
   }
+
+  
 }

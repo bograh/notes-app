@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/database_helper.dart';
-import 'package:myapp/notes_edit_page.dart';
+import 'package:myapp/notes_add_page.dart';
 import 'package:myapp/note_content_page.dart';
 import 'package:intl/intl.dart';
 
@@ -22,7 +22,7 @@ class NotesPageState extends State<NotesPage> {
 
   void _loadNotes() {
     setState(() {
-      _future = DatabaseHelper.fetchNotes(); // Fetch notes from SQLite database
+      _future = DatabaseHelper.fetchNotes();
     });
   }
 
@@ -38,7 +38,7 @@ class NotesPageState extends State<NotesPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color(0xFF202124),
+        backgroundColor: const Color(0xFF141414),
         elevation: 0,
         actions: [
           IconButton(
@@ -47,21 +47,27 @@ class NotesPageState extends State<NotesPage> {
           ),
         ],
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
-                child: Text('Error: ${snapshot.error}',
-                    style: const TextStyle(color: Colors.white)));
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
-                child: Text('No notes found.',
-                    style: TextStyle(color: Colors.white)));
+              child: Text(
+                'No notes found.',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
           }
 
           final notes = snapshot.data!;
@@ -70,7 +76,7 @@ class NotesPageState extends State<NotesPage> {
             0xFFFFF176,
             0xFF81C784,
             0xFF64B5F6,
-            0xFFBA68C8
+            0xFFBA68C8,
           ];
 
           return Padding(
@@ -86,13 +92,13 @@ class NotesPageState extends State<NotesPage> {
                 final note = notes[id];
                 String dateString = note['created_at'];
                 DateTime createdAt = DateTime.parse(dateString);
-                String formattedDate =
-                    DateFormat('MMMM dd, HH:mma').format(createdAt);
+                String formattedDate = DateFormat('MMMM dd, HH:mma').format(createdAt);
+
                 return NoteCard(
                   id: note['id'],
                   title: note['title'],
                   date: formattedDate,
-                  content: note['content'], // Include content
+                  content: note['content'],
                   color: Color(colors[id % colors.length]),
                   reloadNotes: _loadNotes,
                 );
@@ -105,10 +111,10 @@ class NotesPageState extends State<NotesPage> {
         onPressed: () async {
           final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const NoteEditPage()),
+            MaterialPageRoute(builder: (context) => const NoteAddPage()),
           );
           if (result != null && result) {
-            _loadNotes(); // Refresh notes after adding a new one
+            _loadNotes();
           }
         },
         backgroundColor: Colors.black,
@@ -123,7 +129,7 @@ class NoteCard extends StatelessWidget {
   final int id;
   final String title;
   final String date;
-  final String content; // Add content
+  final String content;
   final Color color;
   final VoidCallback reloadNotes;
 
@@ -132,8 +138,8 @@ class NoteCard extends StatelessWidget {
     required this.id,
     required this.title,
     required this.date,
-    required this.content, // Initialize content
-    required this.color, 
+    required this.content,
+    required this.color,
     required this.reloadNotes,
   });
 
@@ -147,13 +153,13 @@ class NoteCard extends StatelessWidget {
             builder: (context) => NoteContentPage(
               id: id,
               title: title,
-              content: content, // Pass content to detail page
+              content: content,
               date: date,
             ),
           ),
         );
         if (result != null && result) {
-          reloadNotes(); // Refresh notes if a note was deleted
+          reloadNotes();
         }
       },
       child: Container(
