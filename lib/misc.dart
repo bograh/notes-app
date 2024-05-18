@@ -94,7 +94,6 @@ class NotesPageState extends State<NotesPage> {
                   date: formattedDate,
                   content: note['content'], // Include content
                   color: Color(colors[id % colors.length]),
-                  reloadNotes: _loadNotes,
                 );
               },
             ),
@@ -125,7 +124,6 @@ class NoteCard extends StatelessWidget {
   final String date;
   final String content; // Add content
   final Color color;
-  final VoidCallback reloadNotes;
 
   const NoteCard({
     super.key,
@@ -133,8 +131,7 @@ class NoteCard extends StatelessWidget {
     required this.title,
     required this.date,
     required this.content, // Initialize content
-    required this.color, 
-    required this.reloadNotes,
+    required this.color,
   });
 
   @override
@@ -153,7 +150,8 @@ class NoteCard extends StatelessWidget {
           ),
         );
         if (result != null && result) {
-          reloadNotes(); // Refresh notes if a note was deleted
+          // Refresh notes if a note was deleted
+          (context as Element).markNeedsBuild();
         }
       },
       child: Container(

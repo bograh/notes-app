@@ -20,14 +20,31 @@ class DatabaseHelper {
 
     return _database!;
   }
-
-  static Future<void> insertNote(Map<String, dynamic> note) async {
-    final db = await getDatabase();
-    await db.insert('notes', note, conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
+  
   static Future<List<Map<String, dynamic>>> fetchNotes() async {
     final db = await getDatabase();
     return await db.query('notes');
+  }
+
+  static Future<void> insertNote(Map<String, dynamic> note) async {
+    final db = await getDatabase();
+    await db.insert('notes', note,
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  static Future<int> deleteNoteById(int id) async {
+  final db = await getDatabase();
+  return await db.delete('notes', where: 'id = ?', whereArgs: [id]);
+}
+
+  // static Future<int> deleteNoteById(Map<String, dynamic> note) async {
+  //   final db = await getDatabase();
+  //   return await db.delete('notes', where: 'id = ?', whereArgs: [note['id']]);
+  // }
+
+  static Future<int> updateNote(Map<String, dynamic> note) async {
+    final db = await getDatabase();
+    return await db
+        .update('notes', note, where: 'id = ?', whereArgs: [note['id']]);
   }
 }

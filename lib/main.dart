@@ -27,14 +27,13 @@ class MyApp extends StatelessWidget {
 class NoteCard extends StatelessWidget {
   final String title;
   final String date;
-  final Color color;
+  final Color color;  
 
   const NoteCard({
     super.key,
     required this.title,
     required this.date,
-    required this.color,
-  });
+    required this.color,  });
 
   @override
   Widget build(BuildContext context) {
