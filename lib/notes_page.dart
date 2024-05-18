@@ -85,8 +85,8 @@ class NotesPageState extends State<NotesPage> {
               itemCount: notes.length,
               itemBuilder: (context, id) {
                 final note = notes[id];
-                final formattedDate = DateFormat('MM dd - HH:mm').format(note['created_at']);
-
+                final formattedDate =
+                    DateFormat('MM dd - HH:mm').format(note['created_at']);
                 return NoteCard(
                   title: note['title'],
                   date: formattedDate,
