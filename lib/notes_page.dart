@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/database_helper.dart';
 import 'package:myapp/notes_edit_page.dart';
+import 'package:intl/intl.dart';  
 
 import 'main.dart';
 
@@ -12,12 +13,18 @@ class NotesPage extends StatefulWidget {
 }
 
 class NotesPageState extends State<NotesPage> {
-  late final Future<List<Map<String, dynamic>>> _future;
+  late Future<List<Map<String, dynamic>>> _future;
 
   @override
   void initState() {
     super.initState();
-    _future = DatabaseHelper.fetchNotes(); // Fetch notes from SQLite database
+    _loadNotes();
+  }
+
+  void _loadNotes() {
+    setState(() {
+      _future = DatabaseHelper.fetchNotes(); // Fetch notes from SQLite database
+    });
   }
 
   @override
@@ -78,9 +85,10 @@ class NotesPageState extends State<NotesPage> {
               itemCount: notes.length,
               itemBuilder: (context, id) {
                 final note = notes[id];
+
                 return NoteCard(
                   title: note['title'],
-                  date: note['created_at'],
+                  date: DateFormat('MM dd - HH:mm').format(note['created_at']),
                   color: Color(colors[id % colors.length]),
                 );
               },
@@ -95,9 +103,7 @@ class NotesPageState extends State<NotesPage> {
             MaterialPageRoute(builder: (context) => const NoteEditPage()),
           );
           if (result != null && result) {
-            setState(() {
-              _future = DatabaseHelper.fetchNotes(); // Refresh notes after adding a new one
-            });
+            _loadNotes(); // Refresh notes after adding a new one
           }
         },
         backgroundColor: Colors.black,
